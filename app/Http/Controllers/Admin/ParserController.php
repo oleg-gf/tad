@@ -40,6 +40,7 @@ class ParserController extends Controller
                 'uses' => 'offers.offer[id,mark,model,generation,year,run,color,body-type,engine-type,transmission,gear-type,generation_id]'
                         ]
         ]);
+        
         $timeToDie = Carbon::now();
 
         foreach ($data['offers'] as $car) {
@@ -90,9 +91,10 @@ class ParserController extends Controller
                                                     ]
                                                     );
             }
-
         }
+
         CarModel::where('updated_at', '<', $timeToDie)->delete();
+
         $cars = CarModel::with([
                                 'mark',
                                 'generation',
@@ -102,7 +104,6 @@ class ParserController extends Controller
                                 'gearType',
                                 'transmission',
                             ])
-                            //->where('updated_at', '<', $timeToDie)
                             ->get();
         return view('admin.parser.index', [
             'cars' => $cars,
